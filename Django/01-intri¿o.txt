@@ -1,0 +1,81 @@
+#pipenv install django 4.1.7
+#django-admin startproject mi_proyecto . (el punto es importante)
+#python manage.py runserver
+
+
+#migrations se encarga de cargar los cambios a una base de datos
+#__init__ indica que es un paquete 
+#admin.py registrar
+#apps.py registrar apps
+#models aqui van las clases, sacan sus datos de la base de datos (migrations)
+#tests automatizados
+#
+
+#1. instalar app 
+
+
+#2. crear url padre
+a) asignar en settings (instalar apps)
+
+#2.1 configurar url hijas
+
+
+#3.-views intrucciones
+a.1)intrucciones de las url
+
+
+
+
+#4.-migraciones (paso a paso)
+https://sqlitebrowser.org/ #visualizador sql datos
+
+migrar datos de models
+b)python manage.py makemigrations ->crear modelos
+NUNCA ELIMINAR ARCHIVOS DE MIGRATIONS
+b.1)python manage.py migrate
+
+#5 panel de admistracion
+crear us
+ python  manage.py createsuperuser
+
+registrar los modelos en las admin del url
+
+#6 pipenv install pylint-django
+crear .pylintrc
+load-plugins=pylint-django
+
+#7plantillas
+
+return renders(
+
+
+
+)
+
+crear carpeta templates en productos y en general 
+crear index.html
+crear base.html !
+
+#dentro de settings
+
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+
+
+
+

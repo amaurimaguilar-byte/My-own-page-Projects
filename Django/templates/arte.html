@@ -1,0 +1,219 @@
+{% extends 'arte_base.html' %} 
+
+{% block extra_css %}
+<style>
+    @keyframes parpadeo {
+        0% { opacity: 1; }
+        50% { opacity: 0.4; }
+        100% { opacity: 1; }
+    }
+    .efecto-parpadeo { animation: parpadeo 2s infinite; }
+
+    .ascii-art {
+        transition: opacity 0.5s ease;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 10px;           /* Reducimos un poco el tamaño si el arte es muy ancho */
+        line-height: 0.8;          
+        white-space: pre;          /* Mantiene el formato del ASCII */
+        
+        /* --- AJUSTES PARA EVITAR LA BARRA --- */
+        display: block;            /* Cambiamos de inline-block a block */
+        width: 100%;               /* Se ajusta al 100% del contenedor */
+        max-width: 100%;           /* No permite que el contenido sea más ancho que la pantalla */
+        overflow-x: hidden;        /* Oculta la barra de desplazamiento */
+        
+        text-align: center;        /* Centramos el arte para que se vea más profesional */
+        padding: 20px;
+        margin: 0 auto;            /* Centra el bloque */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- El ID aquí es CRUCIAL -->
+<div id="contenedor-principal" class="container-fluid px-5 {% if modo == 'oscuro' %}bg-dark text-light{% else %}bg-light text-dark{% endif %}" 
+     style="min-height: 100vh; padding-top: 20px;">
+    
+    <div class="container text-center">
+        <h1>Galería Sorpresa 🎨</h1>
+        <p>Actualiza la página para ver un arte diferente.</p>
+        <hr>
+        
+        <div class="mb-4">
+            <button onclick="cambiarModo('oscuro')" class="btn btn-secondary"> Dark Mode </button>
+            <button onclick="cambiarModo('original')" class="btn btn-outline-secondary"> Light mode </button>
+            <button onclick="copiarArte()" class="btn btn-primary" id="btnCopiar">Copiar Arte 📋</button>
+            <a href="{% url 'arte_gif' %}" class="btn btn-info">Modo GIF 🎞️</a>
+            <a href="{% url 'arte_sorpresa' %}" class="btn btn-sm btn-outline-secondary" role="button"> Recargar </a>
+        </div>
+
+        <pre id="arte-ascii" class="ascii-art efecto-parpadeo bg-transparent {% if modo == 'oscuro' %}text-light{% else %}text-dark{% endif %} border-0">
+{{ dibujo }}
+        </pre>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ lista_artes_gif|json_script:"json-artes" }}
+
+
+<script>
+    // Usamos el json_script para obtener los datos de forma segura
+    const datosRaw = document.getElementById('json-artes');
+    const todasLasArtes = datosRaw ? JSON.parse(datosRaw.textContent) : [];
+    let intervaloAnimacion = null;
+
+    function iniciarAnimacion() {
+        const btn = document.getElementById("btnAnimar");
+        const elementoArte = document.getElementById("arte-ascii");
+
+        // Validación: si no encuentra el elemento, no hace nada
+        if (!elementoArte) {
+            console.error("No se encontró el elemento 'arte-ascii'");
+            return;
+        }
+
+        if (intervaloAnimacion) {
+            clearInterval(intervaloAnimacion);
+            intervaloAnimacion = null;
+            btn.innerText = "Modo GIF 🎞️";
+            return;
+        }
+
+        btn.innerText = "Detener GIF ⏹️";
+        let indice = 0;
+        
+        intervaloAnimacion = setInterval(() => {
+            // Si esto sale undefined, es porque todasLasArtes[indice] no existe
+            if (todasLasArtes[indice] !== undefined) {
+                elementoArte.innerText = todasLasArtes[indice];
+            }
+            
+            indice++;
+            if (indice >= todasLasArtes.length) indice = 0;
+        }, 1000); // Bajé a 1s para probar, cámbialo a 5000 luego
+    }
+</script>
+<script>
+    function cambiarModo(modo) {
+        const contenedor = document.getElementById('contenedor-principal');
+        const arte = document.getElementById('arte-ascii');
+
+        if (modo === 'oscuro') {
+            contenedor.classList.remove('bg-light', 'text-dark');
+            contenedor.classList.add('bg-dark', 'text-light');
+            arte.classList.remove('text-dark');
+            arte.classList.add('text-light');
+        } else {
+            contenedor.classList.remove('bg-dark', 'text-light');
+            contenedor.classList.add('bg-light', 'text-dark');
+            arte.classList.remove('text-light');
+            arte.classList.add('text-dark');
+        }
+    }
+
+    function copiarArte() {
+        const arteText = document.getElementById("arte-ascii").innerText;
+        navigator.clipboard.writeText(arteText).then(() => {
+            const btn = document.getElementById("btnCopiar");
+            btn.innerText = "¡Copiado! ✅";
+            btn.classList.replace("btn-primary", "btn-success");
+            setTimeout(() => {
+                btn.innerText = "Copiar Arte 📋";
+                btn.classList.replace("btn-success", "btn-primary");
+            }, 2000);
+        });
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <!-- Extiende de tu plantilla base si tienes una -->
+{% extends 'base.html' %} 
+
+{% block content %}
+<!-- Aplicamos una clase CSS dinámica -->
+<!-- Cambiamos 'container' por 'container-fluid' y añadimos 'px-5' -->
+<!-- Tu contenido aquí -->
+<div class="container-fluid px-5 {% if modo == 'oscuro' %}bg-dark text-light{% else %}bg-light text-dark{% endif %}" 
+     style="min-height: 100vh; padding-top: 20px;">
+     
+     <div class="text-center">
+<div class="{% if modo == 'oscuro' %}bg-dark text-light{% else %}bg-light text-dark{% endif %}" 
+     style="min-height: 100vh; padding: 20px;">
+    
+    <div class="container text-center">
+        <h1>Galería Sorpresa 🎨</h1>
+        <p>Actualiza la página para ver un arte diferente.</p>
+        <hr>
+        
+        <!-- Botones para cambiar el modo -->
+        <div class="mb-4">
+            <a href="?modo=oscuro" class="btn btn-secondary">Modo Oscuro</a>
+            <a href="?modo=original" class="btn btn-outline-secondary">Modo Original</a>
+        </div>
+
+        <pre style="line-height: 1.2; font-family: monospace; display: inline-block; width: 100%; max-width: 800px; overflow-x: auto;">
+{{ dibujo }}
+        </pre>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %} {% endcomment %}
+
+
+
+
+
+
+{% comment %} {% comment %} <div style="background-color: #121212; color: #e0e0e0; min-height: 100vh; padding: 20px;">
+    <div class="container mt-5 text-center">
+    <h1>Galería Sorpresa 🎨</h1>
+    <p>Actualiza la página para ver un arte diferente.</p>
+    <hr>
+    
+    <!-- Usamos <pre> para respetar los espacios -->
+    <!-- Agregué 'text-align: left; display: inline-block;' para que 
+         el dibujo quede centrado en la página pero alineado a la izquierda por dentro -->
+<!-- Agregamos max-width, overflow-x y un tamaño de letra más pequeño -->
+<pre style="line-height: 1.2; text-align: left; display: inline-block; max-width: 100%; overflow-x: auto; font-size: 12px;">
+{% comment %} <pre style="line-height: 1.2; text-align: left; display: inline-block; color: #00ff00; font-family: monospace;"> {% endcomment %}
+{% comment %} {{ dibujo }}
+</pre>
+   </div>
+</div> {% endcomment %} 

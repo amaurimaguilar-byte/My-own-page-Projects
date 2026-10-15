@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="container mt-5 text-center">
+    <h1>Productos 📦 </h1>
+    <p>Ve el stock de productos o agrega uno</p>
+    <hr>
+</div>
+<a href="{% url 'productos:formulario' %}" class="btn btn-success"> Agregar producto ✚📦 </a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Stock</th>
+            <th>Puntaje</th>
+            <th>Categoria</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>
+                <a href="{% url 'productos:detalle' producto.id %}">
+                    {{producto.nombre}}
+                </a>
+            </td>
+
+
+            <td>{{producto.stock}}</td>
+            <td>{{producto.puntaje}}</td>
+            <td>{{producto.categoria}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

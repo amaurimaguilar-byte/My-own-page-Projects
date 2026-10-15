@@ -1,0 +1,43 @@
+{% load widget_tweaks %}
+
+{% for field in form %}
+<div class="mb-3">
+    {{ field.label_tag }} 
+    {% if field.errors %}
+          {{ field|add_class:"form-control is-invalid" }}
+    {% else %}
+          {{ field|add_class:"form-control" }}    
+    {% endif %}
+    
+    <div class="invalid-feedback">
+        {% for error in field.errors %}
+            {{ error }}
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+
+
+
+
+
+{% comment %} {% load widget_tweaks %}
+instalar pip install django-widget-tweaks
+agreagar en apps
+'widget_tweaks'
+{% for field in form  %}
+<div class="mb-3">
+    {{ field.label_tag }} 
+    {% if field.errors %}
+          {{ field|add_attr:"class:is-invalid"}}
+    {% else %}
+          {{ field }}    
+    {% endif %}
+     <div class="invalid-feedback">
+    {% for error in field.errors %}
+       {{ error}}
+    {% endfor %}
+     </div>
+</div>
+{% endfor %} {% endcomment %}
